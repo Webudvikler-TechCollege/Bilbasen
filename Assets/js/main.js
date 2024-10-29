@@ -1,5 +1,6 @@
-/* Importer Supabase Object */
-import { supabase } from "./supabase.js";
+import { carModel } from "./car.model.js";
 
-// Tjek om objekt eksisterer
-console.log(supabase);
+// Kalder instans af car model
+const car = new carModel();
+const data = await car.list()
+console.log(data);
