@@ -1,10 +1,14 @@
-import { createFooter, createHeader } from "./helpers.js";
-const ROOT = document.getElementById('root')
+import { getAboutPage, getHomePage, getPosterPage } from "./pages.js";
 
-/*
-import { myFetch } from "./myFetch.js";
-const posters = await myFetch(`http://localhost:3000/posters`, 'POST')
-console.log(posters);
-*/
-createHeader(ROOT)
-createFooter(ROOT)
+export const routes = [
+	{ url: '/index.htm', title: "Forside", method: getHomePage },
+	{ url: '/about.htm', title: "Om", method: getAboutPage },
+	{ url: '/posters.htm', title: "Plakater", method: getPosterPage }
+]
+
+export const getRoute = () => {
+	const path = window.location.pathname
+	routes.find(route => route.url === path).method();
+}
+
+getRoute()

@@ -1,9 +1,11 @@
+import { routes } from "./main.js";
+
 /**
  * Create Header
  * @param {*} parentElm 
  */
-export const createHeader = parentElm => {
-	const accHtml = createElement(
+export const createHeader = title => {
+	const header = createElement(
 		'header',
 		'Hej verden',
 		[{ 
@@ -12,19 +14,94 @@ export const createHeader = parentElm => {
 		}],
 		['header']
 	);
-	parentElm.append(accHtml)
+	header.append(createNavBar())
+	document.title = title
+	
+	return header
 }
 
 /**
- * Create Footer
- * @param {*} parentElm 
+ * Creates a partial footer element
+ * @returns html object
  */
-export const createFooter = parentElm => {
+export const createFooter = () => {
 	const accHtml = createElement(
 		'footer',
 		'2024'
 	)
-	parentElm.append(accHtml)
+
+	return accHtml
+}
+
+/**
+ * Creates navigation bar
+ * @returns 
+ */
+export const createNavBar = () => {
+	const accHtml = createElement('ul','',[{ name: 'id', value: 'navbar'}])
+
+	for(let item of routes) {
+		const li = createElement('li')
+		const a = createElement('a', item.title, [
+			{ name: 'href', value: item.url },
+		])
+		li.append(a)
+		accHtml.append(li)
+	}
+
+	return accHtml
+}
+
+/**
+ * 
+ * @returns 
+ */
+export const getRandomPosters = async () => {
+	const data = await myFetch(`http://localhost:3000/posters?limit=4`)
+	const accHtml = createElement('ul')
+	for(let item of data) {
+		const li = createElement('li', item.name)
+		accHtml.append(li)				
+	}
+	console.log(accHtml);
+	return accHtml
+}
+
+/**
+ * 
+ * @returns 
+ */
+export const getPosters = async () => {
+	const data = await myFetch(`http://localhost:3000/posters`)
+	const accHtml = createElement('ul')
+	for(let item of data) {
+		const li = createElement('li', item.name)
+		accHtml.append(li)				
+	}
+	console.log(accHtml);
+	return accHtml
+}
+
+
+/**
+ * Funktion til at fetche med
+ * @param {String} url 
+ * @param {String} method 
+ * @returns any
+ */
+export const myFetch = async (url, method = 'GET') => {
+	try {
+		const response = await fetch(url, {
+			method
+		})
+		if(!response.ok) {
+			throw new Error(`Fejl i myFetch: ${response.status} - ${response.statusText}`)
+		}
+		const data = await response.json()
+		return data;
+	} catch (error) {
+		console.error(error)
+	}
 }
 
 /**
@@ -54,3 +131,7 @@ export const createElement = (elm, innerText = '', attributes = [], classes = []
 
 	return output
 }
+
+export const clearRoot = () => {
+	document.getElementById('root').innerHTML = ''
+} 
